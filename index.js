@@ -1,7 +1,13 @@
 const axios = require('axios');
 
 // General function for http GET request
-const getData = url => axios.get(url);
+const getData = url =>
+  new Promise((resolve, reject) => {
+    axios
+      .get(url)
+      .then(result => resolve(result.data))
+      .catch(err => reject(err));
+  });
 
 // Function to remove unwanted data from year string
 const convertYear = str => {
@@ -38,8 +44,7 @@ const getBudget = async url => {};
 const sortAndPrintData = async () => {
   try {
     // Get array of films
-    const { data } = await getData(`http://oscars.yipitdata.com`);
-    const results = data.results;
+    const { results } = await getData(`http://oscars.yipitdata.com`);
 
     // Initialize array for detail URLs
     const detailURLs = [];
@@ -64,8 +69,13 @@ const sortAndPrintData = async () => {
     });
 
     const budgets = await Promise.all(detailURLs);
+    budgets.map((film, idx) => {
+      const budget = film.Budget;
+      newResults[idx].Budget = budget;
+      return budget;
+    });
 
-    console.log(budgets);
+    console.log(newResults);
   } catch (err) {
     console.log(err);
   }
