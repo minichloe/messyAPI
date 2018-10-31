@@ -1,29 +1,35 @@
 const axios = require('axios');
 
-// Helper object for checking if brackets exist in string
-const brackets = {
-  '{': '}',
-  '[': ']',
-  '(': ')',
-};
-
 // General function for http GET request
 const getData = url => axios.get(url);
 
-// Function to remove unwanted data from strings
-const convertData = (str, type = 'title') => {
-  // Remove extra whitespace
-  str = str.replace(/\s+/g, ' ');
+// Function to remove unwanted data from year string
+const convertYear = str => {
+  str = str
 
-  // Split string into array separated by spaces
-  const arr = str.split(' ');
+    // Remove all whitespace
+    .replace(/\s/g, '')
 
-  // Filter out parts that start with brackets
-  arr = arr.filter(str => !brackets.hasOwnProperty(str[0]));
+    // Remove brackets and all characters inside them
+    .replace(/[\[\(\{].+[\)\}\]]/g, '');
 
-  // Convert back to string depending on data
-  const delimiter = type === 'title' ? ' ' : '';
-  return arr.join(delimiter);
+  return str;
+};
+
+// Function to remove unwanted data from title string
+convertTitle = str => {
+  str = str
+
+    // Remove extra whitespace
+    .replace(/\s+/g, ' ')
+
+    // Remove brackets and all characters up to length 4 inside them
+    .replace(/[\[\(\{].{1,4}[\)\}\]]/g, '')
+
+    // Remove start and trailing spaces
+    .trim();
+
+  return str;
 };
 
 // Function to get budget and change to number format
@@ -46,8 +52,8 @@ const sortAndPrintData = async () => {
       const oscarWinningFilm = {};
       const film = x.films.filter(film => film.Winner)[0];
       // Set film year, title, and budget
-      oscarWinningFilm.Year = convertData(x.year, 'year');
-      oscarWinningFilm.Title = convertData(film.Film);
+      oscarWinningFilm.Year = convertYear(x.year);
+      oscarWinningFilm.Title = convertTitle(film.Film);
       newResults.push(oscarWinningFilm);
 
       //
