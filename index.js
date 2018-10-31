@@ -50,16 +50,22 @@ const sortAndPrintData = async () => {
     results.forEach(x => {
       // Initialize empty object to save wanted data from films
       const oscarWinningFilm = {};
+
+      // Filter and set film to single winning film
       const film = x.films.filter(film => film.Winner)[0];
-      // Set film year, title, and budget
+
+      // Set film year, title
       oscarWinningFilm.Year = convertYear(x.year);
       oscarWinningFilm.Title = convertTitle(film.Film);
       newResults.push(oscarWinningFilm);
 
-      //
+      // Add details URL to array to get budget
+      detailURLs.push(getData(film['Detail URL']));
     });
 
-    console.log(newResults);
+    const budgets = await Promise.all(detailURLs);
+
+    console.log(budgets);
   } catch (err) {
     console.log(err);
   }
