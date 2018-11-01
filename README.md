@@ -11,3 +11,4 @@ Quiz web application built with React-Redux, Node.js, Express.js, and PostgresSQ
 
 1. `npm i` or `yarn install`.
 2. `npm run start`
+3. See results.json.
