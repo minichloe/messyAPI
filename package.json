@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Chloe Chong",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0"

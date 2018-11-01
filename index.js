@@ -1,4 +1,5 @@
 const axios = require('axios');
+const fs = require('fs');
 const { addCommasAndCurrencySign, convertYear, convertBudget, convertTitle, getAverage } = require('./parse');
 
 // General function for http GET request
@@ -12,6 +13,8 @@ const getData = url =>
 
 const sortAndPrintData = async () => {
   try {
+    console.log('Getting and parsing data...\n');
+
     // Get array of films
     const { results } = await getData(`http://oscars.yipitdata.com`);
 
@@ -55,12 +58,30 @@ const sortAndPrintData = async () => {
     const averageStr = average.toFixed(2);
     // Add commas and currency sign
     const convertedAverage = addCommasAndCurrencySign(averageStr);
+    const finalResults = {
+      Films: newResults,
+      AverageBudget: convertedAverage,
+    };
 
+    console.log('Data parsed! See below:\n');
     console.log(newResults);
-    console.log(`Average Budget: ${convertedAverage}`);
+    console.log(`Average Budget: ${convertedAverage}\n`);
+
+    // Create a new json file with parsed data
+    generateOutput(JSON.stringify(finalResults));
   } catch (err) {
     console.log(err);
   }
+};
+
+const generateOutput = data => {
+  console.log(`Generating output file ... \n`);
+  const writeStream = fs.createWriteStream('results.json');
+  writeStream.write(data, 'utf8');
+  writeStream.on('finish', () => {
+    console.log('Success. See results.json.');
+  });
+  writeStream.end();
 };
 
 sortAndPrintData();
