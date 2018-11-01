@@ -75,8 +75,10 @@ const convertToNumber = str => {
 };
 
 const addCommasAndCurrencySign = (str, currency = '$') => {
-  let strWithCommas = '';
-  for (let i = str.length - 1, count = 1; i >= 0; i--) {
+  // Get position of fullstop and start adding commas from there
+  const start = str.length - 3;
+  let strWithCommas = str.slice(start);
+  for (let i = start - 1, count = 1; i >= 0; i--) {
     strWithCommas = str[i] + strWithCommas;
     if (count === 3 && i !== 0) strWithCommas = ',' + strWithCommas;
     count === 3 ? (count = 1) : count++;

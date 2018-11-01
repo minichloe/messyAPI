@@ -49,10 +49,15 @@ const sortAndPrintData = async () => {
       newResults[idx].Budget = budget || 'No data';
     });
 
-    const average = addCommasAndCurrencySign(getAverage(allBudgets).toString());
+    // Get average
+    const average = getAverage(allBudgets);
+    // Convert to string with two decimal places
+    const averageStr = average.toFixed(2);
+    // Add commas and currency sign
+    const convertedAverage = addCommasAndCurrencySign(averageStr);
 
     console.log(newResults);
-    console.log(`Average: ${average}`);
+    console.log(`Average: ${convertedAverage}`);
   } catch (err) {
     console.log(err);
   }
