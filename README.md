@@ -1,20 +1,20 @@
 # Oscars YipitData
 
-Node.js application to retrieve oscars data from YipiData API.
+Node.js application to retrieve oscars data from YipitData API.
 
 ## Assumptions
 
 1. Data collected is used for presenting on a website much like Wikipedia (looping and presenting each year-title-budget combination)
 2. All brackets and parentheses were useless information. (The oscar number can be obtained by getting the array index + 1)
 3. Budgets without any currency sign defaulted to $
-4. The entire dataset is needed so I opted for efficiency in obtaining all the data and order, over parsing the results one by one and printing them.
+4. The entire dataset is needed so I opted for efficiency in obtaining all the data and order, over parsing the results one by one and printing them. For larger datasets, it is better to get them in smaller batches.
 
 ## Approach
 
 1. Looping through the results to get the films in each year
 2. Looping through the array of films each year to get the winning film
 3. Putting helper functions in a separate file `parse.js` for cleaner code
-   - I initially wanted to write a more general function to parse both the year and the title but chose to use two separate functions over submitting multiple arguments and multiple if/else statements
+   - I initially wanted to write a more general function to parse both the year and the title but chose to use two separate functions over submitting multiple arguments and if/else statements
    - I chose to cause a side effect for converting the budget (pushing the budget into an allBudgets array) so I wouldn't have to parse the string twice
    - Instead of parsing the budget twice for calculating the average and for printing, I chose to remove all commas and add them back later for easier calculation
 4. Creating a new object and array to store parsed data
@@ -30,6 +30,6 @@ Node.js application to retrieve oscars data from YipiData API.
 
 ## Set up and run
 
-1. `npm i` or `yarn install`.
-2. `npm run start`
+1. `npm i` or `yarn`.
+2. `npm run start` or `yarn start`.
 3. See results.json.
