@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { convertYear, convertBudget, convertTitle, getAverage } = require('./parse');
+const { addCommasAndCurrencySign, convertYear, convertBudget, convertTitle, getAverage } = require('./parse');
 
 // General function for http GET request
 const getData = url =>
@@ -49,8 +49,10 @@ const sortAndPrintData = async () => {
       newResults[idx].Budget = budget || 'No data';
     });
 
+    const average = addCommasAndCurrencySign(getAverage(allBudgets).toString());
+
     console.log(newResults);
-    console.log(getAverage(allBudgets));
+    console.log(`Average: ${average}`);
   } catch (err) {
     console.log(err);
   }

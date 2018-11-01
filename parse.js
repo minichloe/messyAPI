@@ -45,19 +45,7 @@ const convertBudget = (str, budgets) => {
   str = str.indexOf('-') > -1 ? str.split('-') : [str];
 
   // Convert all strs into numbers
-  const nums = str.map(x => {
-    x = x
-      // Remove brackets and everything in them
-      .replace(/[\[\(\{].+[\)\}\]]/g, '')
-      // Remove everything not a digit and not a fullstop
-      .replace(/[^\d\.]/g, '');
-
-    // Convert to number
-    const num = Number(x);
-    // Assume everything in the thousands range is written in numerical format
-    if (num < 999) return num * 1000000;
-    else return num;
-  });
+  const nums = str.map(x => convertToNumber(x));
 
   // If budget was a range take the average
   const budget = getAverage(nums);
@@ -67,15 +55,33 @@ const convertBudget = (str, budgets) => {
   // Add commas and currency sign back to numbers
   const strNums = nums.map(x => {
     const str = x.toString();
-    let strWithCommas = '';
-    for (let i = str.length - 1, count = 1; i >= 0; i--) {
-      strWithCommas = str[i] + strWithCommas;
-      if (count === 3 && i !== 0) strWithCommas = ',' + strWithCommas;
-      count === 3 ? (count = 1) : count++;
-    }
-    return currency + strWithCommas;
+    return addCommasAndCurrencySign(str, currency);
   });
   return strNums.join(' - ');
+};
+
+const convertToNumber = str => {
+  str = str
+    // Remove brackets and everything in them
+    .replace(/[\[\(\{].+[\)\}\]]/g, '')
+    // Remove everything not a digit and not a fullstop
+    .replace(/[^\d\.]/g, '');
+
+  // Convert to number
+  const num = Number(str);
+  // Assume everything in the thousands range is written in numerical format
+  if (num < 999) return num * 1000000;
+  else return num;
+};
+
+const addCommasAndCurrencySign = (str, currency = '$') => {
+  let strWithCommas = '';
+  for (let i = str.length - 1, count = 1; i >= 0; i--) {
+    strWithCommas = str[i] + strWithCommas;
+    if (count === 3 && i !== 0) strWithCommas = ',' + strWithCommas;
+    count === 3 ? (count = 1) : count++;
+  }
+  return currency + strWithCommas;
 };
 
 const getAverage = arr => {
@@ -85,6 +91,7 @@ const getAverage = arr => {
 };
 
 module.exports = {
+  addCommasAndCurrencySign,
   convertYear,
   convertBudget,
   convertTitle,
