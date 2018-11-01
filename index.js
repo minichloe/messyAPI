@@ -23,7 +23,7 @@ const convertYear = str => {
 };
 
 // Function to remove unwanted data from title string
-convertTitle = str => {
+const convertTitle = str => {
   str = str
 
     // Remove extra whitespace
@@ -38,8 +38,47 @@ convertTitle = str => {
   return str;
 };
 
+// Currency converter object
+const convert = {
+  '£': 1.28,
+  $: 1,
+  '€': 1.13,
+};
+
 // Function to get budget and change to number format
-const getBudget = async url => {};
+const convertBudget = (str, budgets) => {
+  // Get currency symbols
+  const currency = str.match(/[$£€]/g)[0] || '$';
+
+  // Check if there are multiple numbers and convert str into array to avoid duplicate code
+  str = str.indexOf('-') > -1 ? str.split('-') : [str];
+
+  // Convert all strs into numbers
+  const nums = str.map(x => {
+    // Remove everything not a digit and not a fullstop
+    const num = Number(x.replace(/[^\d\.]/g, ''));
+    if (num < 1000000) return num * 1000000;
+    else return num;
+  });
+
+  // If budget was a range take the average
+  const budget = nums.length === 1 ? nums[0] : (nums[0] + nums[1]) / 2;
+  // Add the budget after converting to dollars
+  budgets.push(budget * convert[currency]);
+
+  const strNums = nums.map(x => {
+    const str = x.toString();
+    let strWithCommas = '';
+    for (let i = str.length - 1, count = 1; i >= 0; i--) {
+      strWithCommas = str[i] + strWithCommas;
+      if (count === 3 && i < str.length - 1) strWithCommas = ',' + strWithCommas;
+      count === 3 ? (count = 1) : count++;
+    }
+    return currency + strWithCommas;
+  });
+  console.log(strNums.join(' - '));
+  return strNums.join(' - ');
+};
 
 const sortAndPrintData = async () => {
   try {
@@ -68,17 +107,24 @@ const sortAndPrintData = async () => {
       detailURLs.push(getData(film['Detail URL']));
     });
 
+    // Get all the details from detailsURL API
     const budgets = await Promise.all(detailURLs);
-    budgets.map((film, idx) => {
-      const budget = film.Budget;
-      newResults[idx].Budget = budget;
-      return budget;
+    const allBudgets = [];
+
+    // Map through the budgets
+    budgets.forEach((film, idx) => {
+      // Convert budget into numerical format
+      // const budget = convertBudget(film.Budget);
+      const budget = film.hasOwnProperty('Budget') ? convertBudget(film.Budget, allBudgets) : null;
+      // Add them to results by matching the correct entry with the index
+      newResults[idx].Budget = budget || 'No data';
     });
 
-    console.log(newResults);
+    console.log(allBudgets);
   } catch (err) {
     console.log(err);
   }
 };
 
 sortAndPrintData();
+// convertBudget(`$12-15 million`);
