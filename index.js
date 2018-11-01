@@ -57,7 +57,7 @@ const sortAndPrintData = async () => {
     const convertedAverage = addCommasAndCurrencySign(averageStr);
 
     console.log(newResults);
-    console.log(`Average: ${convertedAverage}`);
+    console.log(`Average Budget: ${convertedAverage}`);
   } catch (err) {
     console.log(err);
   }
