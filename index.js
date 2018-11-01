@@ -60,7 +60,7 @@ const sortAndPrintData = async () => {
     const convertedAverage = addCommasAndCurrencySign(averageStr);
     const finalResults = {
       Films: newResults,
-      AverageBudget: convertedAverage,
+      Average_Budget: convertedAverage,
     };
 
     console.log('Data parsed! See below:\n');
@@ -75,7 +75,7 @@ const sortAndPrintData = async () => {
 };
 
 const generateOutput = data => {
-  console.log(`Generating output file ... \n`);
+  console.log(`Generating output file ...`);
   const writeStream = fs.createWriteStream('results.json');
   writeStream.write(data, 'utf8');
   writeStream.on('finish', () => {
