@@ -29,7 +29,7 @@ const convertTitle = str => {
   return str;
 };
 
-// Currency converter object
+// Currency converter object (information gathered from Google)
 const convertCurrency = {
   '£': 1.28,
   $: 1,
