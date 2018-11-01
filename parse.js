@@ -60,7 +60,7 @@ const convertBudget = (str, budgets) => {
   });
 
   // If budget was a range take the average
-  const budget = nums.length === 1 ? nums[0] : (nums[0] + nums[1]) / 2;
+  const budget = getAverage(nums);
   // Add the budget after converting to dollars
   budgets.push(budget * convertCurrency[currency]);
 
@@ -78,8 +78,15 @@ const convertBudget = (str, budgets) => {
   return strNums.join(' - ');
 };
 
+const getAverage = arr => {
+  const length = arr.length;
+  if (length === 1) return arr[0];
+  else return arr.reduce((a, b) => a + b, 0) / length;
+};
+
 module.exports = {
   convertYear,
   convertBudget,
   convertTitle,
+  getAverage,
 };
